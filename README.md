@@ -84,9 +84,10 @@ http://localhost:3000
 - Gere relatórios na aba do gerente
 
 --COMPONENTES--
-- Alisson gabriel
-- Guilherme Silva
-- Lucas Wu
-- João Marcos
-- Caue Silva
-- Ednaldo Andrade 
+
+- Alisson gabriel 12724127191  
+- Guilherme Silva 12724135253
+- Lucas Wu 12724130877
+- João Marcos 12724132409
+- Caue Silva 12724155736
+- Ednaldo Andrade 12724146825
