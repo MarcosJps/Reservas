@@ -1,36 +1,61 @@
+/* =================================
+   ESTILOS DE BASE E ESTRUTURA
+   ================================= */
+
 body {
   font-family: 'Segoe UI', Arial, sans-serif;
   margin: 0;
   padding: 20px;
-  background-color: #ebebeb;
+  background-color: #f4f7f6;
   color: #333;
   line-height: 1.6;
 }
 
 .container {
   max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
+  margin: 20px auto;
+  padding: 25px;
   background: white;
   border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
 }
 
 h1, h2, h3 {
   color: #2c3e50;
+  margin-top: 0;
   margin-bottom: 20px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
 }
 
 h1 {
   text-align: center;
   font-size: 2.2rem;
+  border-bottom: none;
 }
 
-/* ===== ABAS ===== */
+h4 {
+  color: #34495e;
+  margin-top: 25px;
+  margin-bottom: 10px;
+}
+
+hr {
+    border: none;
+    height: 1px;
+    background-color: #e0e0e0;
+    margin: 30px 0;
+}
+
+/* =================================
+   ABAS DE NAVEGAÇÃO
+   ================================= */
+
+/* Paleta de cores atualizada para um tom verde-azulado (teal) */
 .tab-buttons {
   display: flex;
-  border-bottom: 2px solid #3498db;
-  margin-bottom: 20px;
+  border-bottom: 2px solid #009688; /* Nova cor primária */
+  margin-bottom: 25px;
 }
 
 .tab-btn {
@@ -42,12 +67,12 @@ h1 {
   font-weight: 600;
   color: #7f8c8d;
   transition: all 0.3s;
+  border-radius: 5px 5px 0 0;
 }
 
 .tab-btn.active {
-  color: #2c3e50;
-  background-color: #e1f0fa;
-  border-radius: 5px 5px 0 0;
+  color: #004D40;
+  background-color: #E0F2F1; /* Cor de fundo da aba ativa */
 }
 
 .tab-content {
@@ -58,7 +83,10 @@ h1 {
   display: block;
 }
 
-/* ===== FORMULÁRIOS ===== */
+/* =================================
+   FORMULÁRIOS
+   ================================= */
+
 .form-group {
   margin-bottom: 20px;
 }
@@ -73,12 +101,14 @@ label {
 input[type="text"],
 input[type="date"],
 input[type="time"],
-input[type="number"] {
-  width: 95%;
+input[type="number"],
+select.input-field {
+  width: 100%;
   padding: 12px;
   border: 1px solid #ddd;
   border-radius: 6px;
   font-size: 1rem;
+  box-sizing: border-box;
 }
 
 .button-group {
@@ -88,72 +118,237 @@ input[type="number"] {
 }
 
 button {
-  padding: 12px;
+  padding: 12px 18px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   border-radius: 6px;
   border: none;
-  transition: all 0.3s;
+  transition: background-color 0.3s;
 }
 
+/* Cores dos botões atualizadas */
 .btn-primary {
-  background-color: #3498db;
+  background-color: #009688;
   color: white;
+}
+.btn-primary:hover {
+  background-color: #00796B;
 }
 
 .btn-danger {
   background-color: #e74c3c;
   color: white;
 }
-
-.btn-secondary {
-  background-color: #95a5a6;
-  color: white;
+.btn-danger:hover {
+    background-color: #c0392b;
 }
 
-/* ===== MENSAGENS ===== */
+/* =================================
+   MENSAGENS DE FEEDBACK
+   ================================= */
+
 .message {
   padding: 15px;
   margin: 20px 0;
   border-radius: 6px;
   display: none;
   text-align: center;
+  font-weight: 500;
 }
 
 .message.success {
-  background-color: #d5f5e3;
-  color: #27ae60;
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
   display: block;
 }
 
 .message.error {
-  background-color: #fadbd8;
-  color: #e74c3c;
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
   display: block;
 }
 
-/* ===== RELATÓRIOS (Gerente) ===== */
-pre {
-  background: #f8f9fa;
-  padding: 15px;
+/* ===============================================
+   ESTILOS PARA RELATÓRIOS E LISTAS
+   =============================================== */
+
+.report-output {
+  background: #fff;
+  padding: 0;
   border-radius: 6px;
-  overflow-x: auto;
-  white-space: pre-wrap;
   border: 1px solid #ddd;
+  margin-top: 15px;
+  max-height: 400px;
+  overflow: auto;
 }
 
-/* ===== RESPONSIVIDADE ===== */
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.report-table th, 
+.report-table td {
+  border-bottom: 1px solid #e0e0e0;
+  padding: 12px 15px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.report-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.report-table tbody tr:nth-child(even) {
+  background-color: #fdfdfd;
+}
+
+.report-table tbody tr:hover {
+  background-color: #E0F2F1;
+}
+
+.report-output .error {
+  color: #e74c3c;
+  font-weight: bold;
+  padding: 15px;
+}
+
+/* ===============================================
+   ESTILOS PARA O PAINEL DO GARÇOM
+   =============================================== */
+#lista-reservas-pendentes {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.reserva-item-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.reserva-item-action:last-child {
+  border-bottom: none;
+}
+
+.button-group-inline {
+  display: flex;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.btn-confirm {
+  background-color: #27ae60;
+  color: white;
+}
+.btn-confirm:hover {
+  background-color: #229954;
+}
+
+.btn-cancel {
+  background-color: #e74c3c;
+  color: white;
+}
+.btn-cancel:hover {
+  background-color: #c0392b;
+}
+
+/* ======================================================
+   NOVO: ESTILOS PARA SUB-NAVEGAÇÃO DA ABA GERENTE
+   ====================================================== */
+.gerente-nav {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+}
+
+.gerente-nav-btn {
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    color: #333;
+    padding: 8px 16px;
+}
+.gerente-nav-btn:hover {
+    background-color: #e7e7e7;
+}
+
+.gerente-nav-btn.active {
+    background-color: #009688;
+    color: white;
+    border-color: #009688;
+}
+
+.gerente-view {
+    display: none;
+}
+
+.gerente-view.active {
+    display: block;
+}
+
+
+/* =================================
+   RESPONSIVIDADE
+   ================================= */
+
 @media (max-width: 600px) {
   .container {
     padding: 15px;
+    margin: 10px;
   }
   
-  .button-group {
+  .button-group, .gerente-nav {
     flex-direction: column;
   }
   
   .tab-buttons {
     flex-wrap: wrap;
   }
+
+  .reserva-item-action {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  /* Estilo para o botão de Finalizar */
+.btn-finish {
+    background-color: #3498db; /* Azul */
+    color: white;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+.btn-finish:hover {
+    background-color: #2980b9;
+}
+
+/* Estilo para as 'badges' de status */
+.status-badge {
+    margin-left: 10px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: white;
+}
+.status-pendente {
+    background-color: #f1c40f; /* Amarelo */
+}
+.status-confirmada {
+    background-color: #27ae60; /* Verde */
+}
 }

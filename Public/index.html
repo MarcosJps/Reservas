@@ -17,264 +17,90 @@
                 <button class="tab-btn" data-tab="gerente">Gerente</button>
             </div>
             
-            <!-- ABA ATENDENTE -->
             <div id="atendente" class="tab-content active">
-                <h2>Gerenciamento de Reservas</h2>
-                
+                <h2>Nova Reserva</h2>
                 <form id="form-reserva">
-                    <div class="form-group">
-                        <label for="nome">Nome do responsável:</label>
-                        <input type="text" id="nome" required minlength="3" placeholder="Digite o nome completo">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="data">Data:</label>
-                        <input type="date" id="data" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="hora">Hora:</label>
-                        <input type="time" id="hora" required min="11:00" max="23:00">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="mesa">Número da mesa:</label>
-                        <input type="number" id="mesa" min="1" max="50" required placeholder="Ex: 5">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="pessoas">Quantidade de pessoas:</label>
-                        <input type="number" id="pessoas" min="1" max="20" required placeholder="Ex: 4">
-                    </div>
-                    
+                    <div class="form-group"><label for="nome">Nome do responsável:</label><input type="text" id="nome" required placeholder="Digite o nome completo"></div>
+                    <div class="form-group"><label for="data">Data:</label><input type="date" id="data" required></div>
+                    <div class="form-group"><label for="hora">Hora:</label><input type="time" id="hora" required></div>
+                    <div class="form-group"><label for="mesa">Número da mesa:</label><input type="number" id="mesa" min="1" max="20" required placeholder="Ex: 5"></div>
+                    <div class="form-group"><label for="pessoas">Quantidade de pessoas:</label><input type="number" id="pessoas" min="1" max="20" required placeholder="Ex: 4"></div>
                     <div class="button-group">
                         <button type="submit" class="btn-primary">Criar Reserva</button>
-                        <button type="button" id="btn-cancelar" class="btn-danger">Cancelar Reserva</button>
-                        <button type="reset" class="btn-secondary">Limpar Campos</button>
+                        <button type="button" id="btn-cancelar-atendente" class="btn-danger">Cancelar Reserva</button>
                     </div>
                 </form>
-                
                 <div id="msg-atendente" class="message"></div>
             </div>
             
-            <!-- ABA GARÇOM -->
             <div id="garcom" class="tab-content">
-                <h2>Confirmar Reserva</h2>
-                
-                <form id="form-confirmar">
-                    <div class="form-group">
-                        <label for="nome-garcom">Nome do responsável:</label>
-                        <input type="text" id="nome-garcom" required placeholder="Como está na reserva">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="data-garcom">Data:</label>
-                        <input type="date" id="data-garcom" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="hora-garcom">Hora:</label>
-                        <input type="time" id="hora-garcom" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="garcom-nome">Nome do garçom:</label>
-                        <input type="text" id="garcom-nome" required placeholder="Seu nome">
-                    </div>
-                    
-                    <div class="button-group">
-                        <button type="submit" class="btn-primary">Confirmar Reserva</button>
-                    </div>
-                </form>
-                
-                <div id="msg-garcom" class="message"></div>
+                <h2>Painel do Garçom</h2>
+                <div class="form-group">
+                    <label for="garcom-select">Selecione seu nome:</label>
+                    <select id="garcom-select" class="input-field"><option value="">-- Selecione --</option></select>
+                </div>
+                <hr>
+                <h3>Reservas Pendentes para Hoje</h3>
+                <div id="lista-reservas-pendentes"><p>Selecione seu nome para ver as reservas.</p></div>
             </div>
             
-            <!-- ABA GERENTE -->
             <div id="gerente" class="tab-content">
-                <h2>Relatórios de Reservas</h2>
-                
-                <section>
-                    <h3>Reservas entre datas</h3>
-                    <form id="form-rel1">
+                <h2>Painel do Gerente</h2>
+                <div class="gerente-nav">
+                    <button id="btn-gerenciar-garcons" class="gerente-nav-btn active">Gerenciar Garçons</button>
+                    <button id="btn-ver-relatorios" class="gerente-nav-btn">Ver Relatórios</button>
+                </div>
+
+                <div id="view-gerenciar-garcons" class="gerente-view active">
+                    <h3>Cadastro de Garçons</h3>
+                    <form id="form-cad-garcom">
                         <div class="form-group">
-                            <label for="inicio">Data início:</label>
-                            <input type="date" id="inicio" required>
+                            <label for="garcom-nome-input">Nome do Garçom:</label>
+                            <input type="text" id="garcom-nome-input" required placeholder="Nome e sobrenome">
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="fim">Data fim:</label>
-                            <input type="date" id="fim" required>
-                        </div>
-                        
                         <div class="button-group">
-                            <button type="submit" class="btn-primary">Gerar Relatório</button>
+                            <button type="submit" class="btn-primary">Cadastrar Garçom</button>
                         </div>
                     </form>
-                    <pre id="rel1">Nenhum dado carregado ainda.</pre>
-                </section>
-                
-                <section>
-                    <h3>Reservas por mesa</h3>
-                    <form id="form-rel2">
-                        <div class="form-group">
-                            <label for="mesa-gerente">Mesa:</label>
-                            <input type="number" id="mesa-gerente" min="1" required>
-                        </div>
-                        
-                        <div class="button-group">
-                            <button type="submit" class="btn-primary">Gerar Relatório</button>
-                        </div>
-                    </form>
-                    <pre id="rel2">Nenhum dado carregado ainda.</pre>
-                </section>
-                
-                <section>
-                    <h3>Reservas confirmadas por garçom</h3>
-                    <form id="form-rel3">
-                        <div class="form-group">
-                            <label for="garcom-gerente">Garçom:</label>
-                            <input type="text" id="garcom-gerente" required placeholder="Nome do garçom">
-                        </div>
-                        
-                        <div class="button-group">
-                            <button type="submit" class="btn-primary">Gerar Relatório</button>
-                        </div>
-                    </form>
-                    <pre id="rel3">Nenhum dado carregado ainda.</pre>
-                </section>
+                    <div id="msg-gerente" class="message"></div>
+                    <h4>Garçons Cadastrados</h4>
+                    <div id="lista-garcons" class="report-output">Carregando...</div>
+                </div>
+
+                <div id="view-relatorios" class="gerente-view">
+                    <h3>Relatórios de Reservas</h3>
+                    <section>
+                        <h4>Reservas entre datas</h4>
+                        <form id="form-rel1">
+                            <div class="form-group"><label for="inicio">Data início:</label><input type="date" id="inicio" required></div>
+                            <div class="form-group"><label for="fim">Data fim:</label><input type="date" id="fim" required></div>
+                            <div class="button-group"><button type="submit" class="btn-primary">Gerar Relatório</button></div>
+                        </form>
+                        <div id="rel1" class="report-output"></div>
+                    </section>
+                    <hr>
+                    <section>
+                        <h4>Reservas por mesa</h4>
+                        <form id="form-rel2">
+                            <div class="form-group"><label for="mesa-gerente">Mesa:</label><input type="number" id="mesa-gerente" min="1" max="20" required></div>
+                            <div class="button-group"><button type="submit" class="btn-primary">Gerar Relatório</button></div>
+                        </form>
+                        <div id="rel2" class="report-output"></div>
+                    </section>
+                    <hr>
+                    <section>
+                        <h4>Reservas por garçom</h4>
+                        <form id="form-rel3">
+                            <div class="form-group"><label for="garcom-gerente">Garçom:</label><input type="text" id="garcom-gerente" required placeholder="Nome do garçom"></div>
+                            <div class="button-group"><button type="submit" class="btn-primary">Gerar Relatório</button></div>
+                        </form>
+                        <div id="rel3" class="report-output"></div>
+                    </section>
+                </div>
             </div>
         </div>
     </div>
-
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-
-            const socket = io();
-            
-            // Controle das abas
-            const tabButtons = document.querySelectorAll('.tab-btn');
-            const tabContents = document.querySelectorAll('.tab-content');
-            
-            tabButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const tabId = button.getAttribute('data-tab');
-                    
-                    tabButtons.forEach(btn => btn.classList.remove('active'));
-                    tabContents.forEach(content => content.classList.remove('active'));
-                    
-                    button.classList.add('active');
-                    document.getElementById(tabId).classList.add('active');
-                });
-            });
-
-            const hoje = new Date();
-            document.getElementById('data').min = hoje.toISOString().split('T')[0];
-            document.getElementById('data-garcom').min = hoje.toISOString().split('T')[0];
-            document.getElementById('inicio').min = hoje.toISOString().split('T')[0];
-            document.getElementById('fim').min = hoje.toISOString().split('T')[0];
-            
-            const msgAtendente = document.getElementById('msg-atendente');
-            const msgGarcom = document.getElementById('msg-garcom');
-            
-            if (!msgAtendente || !msgGarcom) {
-                console.error('Elementos de mensagem não encontrados!');
-                return;
-            }
-
-            // ATENDENTE 
-            document.getElementById('form-reserva').addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const dados = {
-                    nome: document.getElementById('nome').value.trim(),
-                    data: document.getElementById('data').value,
-                    hora: document.getElementById('hora').value,
-                    mesa: parseInt(document.getElementById('mesa').value),
-                    pessoas: parseInt(document.getElementById('pessoas').value)
-                };
-                
-                socket.emit('criarReserva', dados, (resposta) => {
-                    msgAtendente.textContent = resposta.message;
-                    msgAtendente.className = resposta.success ? 'message success' : 'message error';
-                    msgAtendente.style.display = 'block';
-                    setTimeout(() => msgAtendente.style.display = 'none', 5000);
-                    
-                    if (resposta.success) {
-                        this.reset();
-                    }
-                });
-            });
-            
-            document.getElementById('btn-cancelar').addEventListener('click', function() {
-                const nome = document.getElementById('nome').value.trim();
-                const mesa = parseInt(document.getElementById('mesa').value);
-                
-                if(!nome || isNaN(mesa)) {
-                    alert('Digite o nome e o número da mesa da reserva que deseja cancelar');
-                    return;
-                }
-                
-                if(confirm(`Cancelar reserva para ${nome} na mesa ${mesa}?`)) {
-                    socket.emit('cancelarReserva', { nome, mesa }, (resposta) => {
-                        msgAtendente.textContent = resposta.message;
-                        msgAtendente.className = resposta.success ? 'message success' : 'message error';
-                        msgAtendente.style.display = 'block';
-                        setTimeout(() => msgAtendente.style.display = 'none', 5000);
-                    });
-                }
-            });
-
-            //  GARÇOM 
-            document.getElementById('form-confirmar').addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const dados = {
-                    nome: document.getElementById('nome-garcom').value.trim(),
-                    data: document.getElementById('data-garcom').value,
-                    hora: document.getElementById('hora-garcom').value,
-                    garcom: document.getElementById('garcom-nome').value.trim()
-                };
-                
-                socket.emit('confirmarReserva', dados, (resposta) => {
-                    msgGarcom.textContent = resposta.message;
-                    msgGarcom.className = resposta.success ? 'message success' : 'message error';
-                    msgGarcom.style.display = 'block';
-                    setTimeout(() => msgGarcom.style.display = 'none', 5000);
-                    
-                    if (resposta.success) {
-                        this.reset();
-                    }
-                });
-            });
-
-            
-            function formatarDados(dados) {
-                return dados.map(reserva => {
-                    return `ID: ${reserva.id} | ${reserva.nome} | Mesa: ${reserva.mesa}
-Data: ${reserva.data} ${reserva.hora} | Pessoas: ${reserva.pessoas}
-Status: ${reserva.status} ${reserva.garcom ? '| Garçom: ' + reserva.garcom : ''}
-------------------------------------`;
-                }).join('\n\n') || 'Nenhum dado encontrado.';
-            }
-            
-            document.getElementById('form-rel1').addEventListener('submit', function(e) {
-                e.preventDefault();
-                socket.emit('relatorio1', {
-                    inicio: document.getElementById('inicio').value,
-                    fim: document.getElementById('fim').value,
-                }, (resposta) => {
-                    const rel1 = document.getElementById('rel1');
-                    if (resposta.success) {
-                        rel1.textContent = formatarDados(resposta.data);
-                    } else {
-                        rel1.textContent = 'Erro: ' + resposta.message;
-                        rel1.style.color = 'red';
-                    }
-                });
-            });
-        });
-    </script>
+    <script src="client.js"></script>
 </body>
 </html>
