@@ -13,7 +13,7 @@ const db = new sqlite3.Database('./reservas.db', (err) => {
   else console.log("Conectado ao banco de dados SQLite.");
 });
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'Public')));
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
 
@@ -23,15 +23,28 @@ db.serialize(() => {
 });
 
 io.on('connection', (socket) => {
-  // Eventos de Garçons (sem alteração)
-  socket.on('cadastrarGarcom', (nome, callback) => { db.run(`INSERT INTO garcons (nome) VALUES (?)`, [nome], function (err) { if (err) return callback({ success: false, message: 'Este nome já existe.' }); callback({ success: true, message: 'Garçom cadastrado!' }); io.emit('garconsAtualizados'); }); });
+  // Eventos de Garçons
+  socket.on('cadastrarGarcom', (nome, callback) => { nome = typeof nome === 'string' ? nome.trim() : ''; if (!nome) return callback({ success: false, message: 'Informe um nome válido.' }); db.run(`INSERT INTO garcons (nome) VALUES (?)`, [nome], function (err) { if (err) return callback({ success: false, message: 'Este nome já existe.' }); callback({ success: true, message: 'Garçom cadastrado!' }); io.emit('garconsAtualizados'); }); });
   socket.on('getGarcons', (callback) => { db.all(`SELECT * FROM garcons ORDER BY nome`, [], (err, rows) => { if (err) return callback({ success: false, data: [] }); callback({ success: true, data: rows }); }); });
   socket.on('excluirGarcom', (id, callback) => { db.run(`DELETE FROM garcons WHERE id = ?`, [id], function(err) { if (err) return callback({ success: false, message: 'Erro ao excluir.' }); callback({ success: true, message: 'Garçom excluído.' }); io.emit('garconsAtualizados'); }); });
 
-  // --- Eventos de Reserva ATUALIZADOS ---
+  // --- Eventos de Reserva ---
 
-  // LÓGICA DE CONFLITO ATUALIZADA
   socket.on('criarReserva', (dados, callback) => {
+    // Validação básica dos dados recebidos
+    const nome = typeof dados?.nome === 'string' ? dados.nome.trim() : '';
+    const data = dados?.data;
+    const hora = dados?.hora;
+    const mesa = Number(dados?.mesa);
+    const pessoas = Number(dados?.pessoas);
+
+    if (!nome) return callback({ success: false, message: 'Informe o nome do responsável.' });
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(data || '')) return callback({ success: false, message: 'Data inválida.' });
+    if (!/^\d{2}:\d{2}$/.test(hora || '')) return callback({ success: false, message: 'Hora inválida.' });
+    if (!Number.isInteger(mesa) || mesa < 1 || mesa > 20) return callback({ success: false, message: 'Mesa inválida (1 a 20).' });
+    if (!Number.isInteger(pessoas) || pessoas < 1 || pessoas > 20) return callback({ success: false, message: 'Quantidade de pessoas inválida (1 a 20).' });
+    dados = { nome, data, hora, mesa, pessoas };
+
     // Verifica conflitos em uma janela de 2 horas
     const DURACAO_MINUTOS = 120;
     db.all(
@@ -58,7 +71,7 @@ io.on('connection', (socket) => {
     );
   });
   
-  // NOVO EVENTO: Finalizar Reserva
+  // Finalizar Reserva
   socket.on('finalizarReserva', (id, callback) => {
     db.run(`UPDATE reservas SET status = 'finalizada' WHERE id = ? AND status = 'confirmada'`, [id], function(err) {
         if (err || this.changes === 0) return callback({ success: false, message: 'Erro ao finalizar.' });
@@ -67,7 +80,7 @@ io.on('connection', (socket) => {
     });
   });
 
-  // ATUALIZADO: Lista do garçom agora busca reservas pendentes E confirmadas do dia
+  // Lista do garçom: busca reservas pendentes E confirmadas do dia
   socket.on('getReservasDoDia', (data, callback) => {
     db.all(`SELECT * FROM reservas WHERE data = ? AND status IN ('pendente', 'confirmada') ORDER BY hora`, [data.dia], (err, rows) => {
         if (err) return callback({ success: false });
@@ -75,7 +88,7 @@ io.on('connection', (socket) => {
     });
   });
   
-  // Eventos de confirmar, cancelar e relatórios (sem alteração na lógica)
+  // Eventos de confirmar, cancelar e relatórios
   socket.on('confirmarReserva', (dados, callback) => { db.run(`UPDATE reservas SET status = 'confirmada', garcom = ? WHERE id = ? AND status = 'pendente'`, [dados.garcom, dados.id], function (err) { if (err || this.changes === 0) return callback({ success: false, message: 'Erro ao confirmar.' }); callback({ success: true, message: 'Reserva confirmada!' }); io.emit('reservaAtualizada'); }); });
   socket.on('cancelarReserva', (id, callback) => { db.run(`UPDATE reservas SET status = 'cancelada_garcom' WHERE id = ? AND status = 'pendente'`,[id], function(err) { if (err || this.changes === 0) return callback({ success: false, message: 'Erro ao cancelar.' }); callback({ success: true, message: 'Reserva cancelada.' }); io.emit('reservaAtualizada'); }); });
   socket.on('cancelarReservaPeloAtendente', (dados, callback) => { db.run(`UPDATE reservas SET status = 'cancelada' WHERE nome = ? AND mesa = ? AND status = 'pendente'`, [dados.nome, dados.mesa], function(err) { if (this.changes === 0) return callback({ success: false, message: 'Reserva não encontrada.' }); callback({ success: true, message: 'Reserva cancelada.' }); io.emit('reservaAtualizada'); }); });

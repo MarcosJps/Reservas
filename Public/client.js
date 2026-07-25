@@ -1,6 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
     const socket = io();
 
+    function escapeHTML(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
     function exibirMensagem(elemento, mensagem, sucesso) {
         if (!elemento) return;
         elemento.textContent = mensagem;
@@ -20,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!dados || dados.length === 0) return '<p>Nenhum garçom cadastrado.</p>';
         let tabela = '<table class="report-table"><thead><tr><th>ID</th><th>NOME</th><th>AÇÕES</th></tr></thead><tbody>';
         dados.forEach(linha => {
-            tabela += `<tr><td>${linha.id}</td><td>${linha.nome}</td><td><button class="btn-delete" data-id="${linha.id}">Excluir</button></td></tr>`;
+            tabela += `<tr><td>${escapeHTML(linha.id)}</td><td>${escapeHTML(linha.nome)}</td><td><button class="btn-delete" data-id="${escapeHTML(linha.id)}">Excluir</button></td></tr>`;
         });
         tabela += '</tbody></table>';
         return tabela;
@@ -34,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
         tabela += '</tr></thead><tbody>';
         dados.forEach(linha => {
             tabela += '<tr>';
-            headers.forEach(h => tabela += `<td>${linha[h] || ''}</td>`);
+            headers.forEach(h => tabela += `<td>${escapeHTML(linha[h])}</td>`);
             tabela += '</tr>';
         });
         tabela += '</tbody></table>';
@@ -49,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const valorSelecionado = garcomSelect ? garcomSelect.value : ''; 
             if (garcomSelect) {
                 garcomSelect.innerHTML = '<option value="">-- Selecione --</option>';
-                resposta.data.forEach(g => { garcomSelect.innerHTML += `<option value="${g.nome}">${g.nome}</option>`; });
+                resposta.data.forEach(g => { garcomSelect.innerHTML += `<option value="${escapeHTML(g.nome)}">${escapeHTML(g.nome)}</option>`; });
                 garcomSelect.value = valorSelecionado;
             }
             const listaGerente = document.getElementById('lista-garcons');
@@ -59,7 +69,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const listaReservasGarcom = document.getElementById('lista-reservas-pendentes');
 
-    // ATUALIZADO: Renderiza botões diferentes com base no status da reserva
     function carregarReservasParaGarcom() {
         if (!garcomSelect || !listaReservasGarcom) return;
         const garcomLogado = garcomSelect.value;
@@ -87,8 +96,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 return `
                     <div class="reserva-item-action">
                         <span>
-                            <strong>${reserva.nome}</strong> - Mesa ${reserva.mesa} às ${reserva.hora}
-                            <span class="status-badge status-${reserva.status}">${reserva.status}</span>
+                            <strong>${escapeHTML(reserva.nome)}</strong> - Mesa ${escapeHTML(reserva.mesa)} às ${escapeHTML(reserva.hora)}
+                            <span class="status-badge status-${escapeHTML(reserva.status)}">${escapeHTML(reserva.status)}</span>
                         </span>
                         <div class="button-group-inline">${botoes}</div>
                     </div>`;
@@ -154,7 +163,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const formReserva = document.getElementById('form-reserva'); if (formReserva) { formReserva.addEventListener('submit', function(e) { e.preventDefault(); const dados = { nome: this.nome.value.trim(), data: this.data.value, hora: this.hora.value, mesa: parseInt(this.mesa.value), pessoas: parseInt(this.pessoas.value) }; socket.emit('criarReserva', dados, (r) => { exibirMensagem(document.getElementById('msg-atendente'), r.message, r.success); if (r.success) this.reset(); }); }); }
     const btnCancelarAtendente = document.getElementById('btn-cancelar-atendente'); if (btnCancelarAtendente) { btnCancelarAtendente.addEventListener('click', () => { const nome = document.getElementById('nome').value.trim(); const mesa = parseInt(document.getElementById('mesa').value); if (!nome || isNaN(mesa)) return alert('Preencha NOME e MESA.'); if (confirm(`Cancelar reserva para ${nome}?`)) { socket.emit('cancelarReservaPeloAtendente', { nome, mesa }, (r) => exibirMensagem(document.getElementById('msg-atendente'), r.message, r.success)); } }); }
 
-    // ATUALIZADO: Listener agora também escuta o clique no botão Finalizar
     if (garcomSelect) garcomSelect.addEventListener('change', carregarReservasParaGarcom);
     if (listaReservasGarcom) {
         listaReservasGarcom.addEventListener('click', (e) => {
